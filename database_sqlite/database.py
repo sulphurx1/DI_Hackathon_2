@@ -42,73 +42,79 @@
 # "pubDate": "2022-02-03 10:30:40",
 # to 2022-02-03
 
-import os.path
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import sqlite3
 import os.path
 
-engine = create_engine('sqlite:///news.db', echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
-Base = declarative_base()
 
+class DatabaseNews:
+    def __init__(self):
+        self.engine = create_engine('sqlite:///news.db', echo=True)
+        self.Session = sessionmaker(bind=self.engine)
+        self.session = self.Session()
+        self.Base = declarative_base()
 
-class News(Base):
-    __tablename__ = 'newstable'
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
-    link = Column(String)
-    keywords = Column(String)
-    creator = Column(String)
-    video_url = Column(String)
-    description = Column(String)
-    content = Column(String)
-    pub_date = Column(Date)
-    full_description = Column(String)
-    image_url = Column(String)
-    source_id = Column(String)
-    country = Column(String)
-    category = Column(String)
-    business = Column(String)
-    language = Column(String)
+        class News(self.Base):
+            __tablename__ = 'newstable'
+            id = Column(Integer, primary_key=True)
+            title = Column(String)
+            link = Column(String)
+            keywords = Column(String)
+            creator = Column(String)
+            video_url = Column(String)
+            description = Column(String)
+            content = Column(String)
+            pub_date = Column(Date)
+            full_description = Column(String)
+            image_url = Column(String)
+            source_id = Column(String)
+            country = Column(String)
+            category = Column(String)
+            business = Column(String)
+            language = Column(String)
 
+        self.News = News
 
-db_file = 'news.db'
-if not os.path.isfile(db_file):
-    Base.metadata.create_all(engine)
+        db_file = 'news.db'
+        if not os.path.isfile(db_file):
+            self.Base.metadata.create_all(self.engine)
 
+    def update_news_table(self, news):
+        if not isinstance(news, dict):
+            raise TypeError('News should be a dictionary.')
 
-def update_news_table(news):
-    # news take a list of news items
-    if not isinstance(news, list):
-        news = [news]
-    for item in news:
-        # Transform pubDate to date
-        pub_date = datetime.strptime(
-            item['pubDate'], '%Y-%m-%d').date()
+        try:
+            # Check if dictionary has missing keys and replace with 'not provided'
+            for key in self.News.__table__.columns.keys():
+                if key not in news:
+                    news[key] = 'not provided'
+            
+            # Transform pubDate to date
+            pub_date = datetime.strptime(news['pubDate'], '%Y-%m-%d').date()
 
-        # Create a News object
-        news_item = News(
-            title=item['title'],
-            link=item['link'],
-            keywords=item['keywords'],
-            creator=item['creator'],
-            video_url=item['video_url'],
-            description=item['description'],
-            content=item['content'],
-            pub_date=pub_date,
-            full_description=item['full_description'],
-            image_url=item['image_url'],
-            source_id=item['source_id'],
-            country=item['country'],
-            category=item['category'],
-            business=item['business'],
-            language=item['language']
-        )
-
-        # Add the News object to the session and commit the changes
-        session.add(news_item)
-        session.commit()
+            # Create a News object
+            news_item = self.News(
+                title=news['title'],
+                link=news['link'],
+                keywords=news['keywords'],
+                creator=news['creator'],
+                video_url=news['video_url'],
+                description=news['description'],
+                content=news['content'],
+                pub_date=pub_date,
+                full_description=news['full_description'],
+                image_url=news['image_url'],
+                source_id=news['source_id'],
+                country=news['country'],
+                category=news['category'],
+                business=news['business'],
+                language=news['language']
+            )
+            
+            # Add the News object to the session and commit the changes
+            self.session.add(news_item)
+            self.session.commit()
+        except Exception as e:
+            print(f"An exception occurred while updating the news table: {e}")
