@@ -90,9 +90,6 @@ class DatabaseNews:
             for key in self.News.__table__.columns.keys():
                 if key not in news:
                     news[key] = 'not provided'
-            
-            # Transform pubDate to date
-            pub_date = datetime.strptime(news['pubDate'], '%Y-%m-%d').date()
 
             # Create a News object
             news_item = self.News(
@@ -102,8 +99,9 @@ class DatabaseNews:
                 creator=news['creator'],
                 video_url=news['video_url'],
                 description=news['description'],
+                pub_date=datetime.strptime(
+                    news['pub_date'].split(' ')[0], '%Y-%m-%d'),
                 content=news['content'],
-                pub_date=pub_date,
                 full_description=news['full_description'],
                 image_url=news['image_url'],
                 source_id=news['source_id'],
@@ -112,7 +110,7 @@ class DatabaseNews:
                 business=news['business'],
                 language=news['language']
             )
-            
+
             # Add the News object to the session and commit the changes
             self.session.add(news_item)
             self.session.commit()
