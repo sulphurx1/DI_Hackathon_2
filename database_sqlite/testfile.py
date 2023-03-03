@@ -1,4 +1,3 @@
-from datetime import datetime
 import database as db
 
 # create an instance of the DatabaseNews class

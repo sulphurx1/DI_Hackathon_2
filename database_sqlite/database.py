@@ -114,5 +114,6 @@ class DatabaseNews:
             # Add the News object to the session and commit the changes
             self.session.add(news_item)
             self.session.commit()
+            self.session.close()
         except Exception as e:
             print(f"An exception occurred while updating the news table: {e}")
