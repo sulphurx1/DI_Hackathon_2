@@ -1,17 +1,10 @@
 from discord.ext import commands
 import discord
 import sqlite3 as sql
-<<<<<<< Updated upstream
-
-
-BOT_TOKEN = 'MTA4MTEzMTQ1MDEwNTA3Mzc3Ng.GB2WxL.pIMaOgrddtDBNyKMHBVM8VKAz5rTIDLKvZPYGs'
-=======
 import random
-import ctypes
 
 
-BOT_TOKEN = 'MTA4MTEzMTQ1MDEwNTA3Mzc3Ng.Gs40vp.fpUqz0f-eCmWlDyDeEUZhD3UqTUFApiRvbeq4o'
->>>>>>> Stashed changes
+BOT_TOKEN = 'MTA4MTEzMTQ1MDEwNTA3Mzc3Ng.GxMW6t.GClNF3vWNXm6DZJOr32ThYJMaqXciPLVho3UEI'
 CHANNEL_ID = 1081134222015733794
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
@@ -22,30 +15,17 @@ async def on_ready():
     channel = bot.get_channel(CHANNEL_ID)
     await channel.send('Link The Megatron Clowns is online!')
 
-<<<<<<< Updated upstream
 
-@bot.command()
-async def news(ctx, word):
-    async with sql.connect('Database.db') as db:
-        async with db.cursor() as cursor:
-            await cursor.execute('SELECT title FROM News WHERE title = word')
-            data = await cursor.fetchone()
-            if data:
-                await ctx.send(data)
-            else:
-                pass    
-=======
-db = sql.connect('news.db')
+db = sql.connect('Database.db')
 cursor = db.cursor()
 
-x = random.randint(1, 7)
-y = cursor.execute("SELECT * FROM News ORDER BY {} LIMIT 1".format(x))
+x = random.randint(1, 6)
+y = cursor.execute("SELECT * FROM NEWS ORDER BY {} LIMIT 1".format(x))
 y = cursor.fetchall()
-print()
+print(y)
 @bot.command()
 async def news(ctx):
     await ctx.send(y)    
->>>>>>> Stashed changes
 
 
 bot.run(BOT_TOKEN)

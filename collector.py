@@ -39,7 +39,6 @@ cursor.execute("""INSERT INTO NEWS (
                 `title`, `creator`, `description`, `content`, `pubDate`, `image_url`)
                 VALUES ('?', '?', '?', '?', '?', '?' );""",
                 {'title': title, 'creator': creator, 'description': description, 'content': content, 'pubDate': pubDate, 'image_url': image_url})
-# cursor.execute(x)
 
 cursor.execute('SELECT * FROM News')
 cursor.fetchall()
