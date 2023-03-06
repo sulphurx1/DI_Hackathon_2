@@ -3,10 +3,11 @@ import requests
 from pathlib import Path
 import json
 import matplotlib.pyplot as pp
+import matplotlib.pyplot as plt
 import numpy as np
 
 try:
-    response = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC&tsyms=USD,EUR&api_key=1b0999003f21c3fddb9eee4176bf5c42afc5e21a9353435e84727e529309c353')
+    response = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC&tsyms=USD,EUR,SGD,INR,CAD,AUD&api_key=1b0999003f21c3fddb9eee4176bf5c42afc5e21a9353435e84727e529309c353')
     # # response.raise_for_status()
     # access JSOn content
     # response = requests.get('https://min-api.cryptocompare.com/data/tradingsignals/intotheblock/latest?fsym=BTC&api_key=1b0999003f21c3fddb9eee4176bf5c42afc5e21a9353435e84727e529309c353')
@@ -28,68 +29,35 @@ except HTTPError as http_err:
 except Exception as err:
     print(f'Other error occurred: {err}')
 
-# lets read whole file into numpy 2d array
 
-data=np.loadtxt(fname='output.txt', delimiter=',')
-print(data)
+usd_price = jsonResponse["RAW"]["BTC"]["USD"]["PRICE"]
+euro_price = jsonResponse["RAW"]["BTC"]["EUR"]["PRICE"]
+cad_price = jsonResponse["RAW"]["BTC"]["CAD"] ["PRICE"]
+sgd_price = jsonResponse["RAW"]["BTC"]["SGD"] ["PRICE"]
 
-# split into 2 arrays
-X=[]
-Y=[]
+# Price
+# 
+#
+#       |
+#       |      |
+#       |      |
+##################>
+#     USD    EURO
 
-# Ask the user for input
-x_input = input("Enter a value for x: ")
-y_input = input("Enter a value for y: ")
+x_axis =["USD","EURO","CAD","SGD"]
+y_axis = [usd_price, euro_price,cad_price,sgd_price]
 
-# Convert the user input to float values and append to arrays
-X.append(float(x_input))
-Y.append(float(y_input))
+ 
+# creating the bar plot
+plt.bar(x_axis, y_axis, color ='maroon',
+        width = 0.4)
 
-for i in range(len(data)):
-    for j in range(2):
-        if j==0:
-            X.append(data[i] [j])
-        else:
-            Y.append(data[i] [j])
-print(X)
-print(Y)
-
-pp.plot(X,Y)
-pp.xlabel('X')
-pp.ylabel('Y')
-pp.title('')
-pp.show()
+plt.xlabel("CURRENCY")
+plt.ylabel("PRICE")
+plt.title("BTC")
+plt.show()
 
 
 
-
-
-
-
-
-
-
-
-# try:
-#     response = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC&tsyms=USD,EUR&api_key=1b0999003f21c3fddb9eee4176bf5c42afc5e21a9353435e84727e529309c353')
-#     # response.raise_for_status()
-#     # access JSOn content
-#     jsonResponse = response.json()
-#     print("Entire JSON response")
-#     print(jsonResponse)
-#     json_obj=json.dumps(jsonResponse)
-#     with open('D:\hackathon_2\DI_Hackathon_2\data1.txt', 'w') as f:
-#         f.write(json_obj)
-#     if response.status_code == 200:
-#         with open('D:\hackathon_2\DI_Hackathon_2\data1.txt', 'w') as file:
-#             file.write(response.text)
-#             print('Data written to file successfully.')
-#             file.close()
-    
-
-# except HTTPError as http_err:
-#     print(f'HTTP error occurred: {http_err}')
-# except Exception as err:
-#     print(f'Other error occurred: {err}')
 
 
