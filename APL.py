@@ -37,6 +37,14 @@ print(data)
 X=[]
 Y=[]
 
+# Ask the user for input
+x_input = input("Enter a value for x: ")
+y_input = input("Enter a value for y: ")
+
+# Convert the user input to float values and append to arrays
+X.append(float(x_input))
+Y.append(float(y_input))
+
 for i in range(len(data)):
     for j in range(2):
         if j==0:
